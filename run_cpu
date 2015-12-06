@@ -3,6 +3,11 @@
 if [ -z "$1" ]
   then echo "Please provide the name of the game, e.g.  ./run_cpu breakout "; exit 0
 fi
+STATE=false
+if [ "$#" -eq 2 ]; then
+    echo "Trying to read partially learned state from $2"
+    STATE=true
+fi
 ENV=$1
 FRAMEWORK="alewrap"
 
@@ -40,7 +45,10 @@ pool_frms="type="$pool_frms_type",size="$pool_frms_size
 num_threads=4
 
 args="-framework $FRAMEWORK -game_path $game_path -name $agent_name -env $ENV -env_params $env_params -agent $agent -agent_params $agent_params -steps $steps -eval_freq $eval_freq -eval_steps $eval_steps -prog_freq $prog_freq -save_freq $save_freq -actrep $actrep -gpu $gpu -random_starts $random_starts -pool_frms $pool_frms -seed $seed -threads $num_threads"
+if $STATE; then
+    args="$args -saved_state $2"
+fi
 echo $args
 
 cd dqn
-../torch/bin/qlua train_agent.lua $args
+luajit train_agent.lua $args
