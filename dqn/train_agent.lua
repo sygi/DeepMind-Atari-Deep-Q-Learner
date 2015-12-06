@@ -44,6 +44,8 @@ cmd:option('-verbose', 2,
 cmd:option('-threads', 1, 'number of BLAS threads')
 cmd:option('-gpu', -1, 'gpu flag')
 
+cmd:option('-saved_state', '', 'saved pretrained state (*.z7) file')
+
 cmd:text()
 
 local opt = cmd:parse(arg)
@@ -196,7 +198,7 @@ while step < opt.steps do
                                 v_history = v_history,
                                 td_history = td_history,
                                 qmax_history = qmax_history,
-                                arguments=opt})
+                                arguments=opt}, "ascii")
         if opt.saveNetworkParams then
             local nets = {network=w:clone():float()}
             torch.save(filename..'.params.t7', nets, 'ascii')

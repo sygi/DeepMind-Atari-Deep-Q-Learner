@@ -98,6 +98,10 @@ end
 function setup(_opt)
     assert(_opt)
 
+    if _opt.saved_state == '' then
+        print("No saved state")
+    end
+
     --preprocess options:
     --- convert options strings to tables
     _opt.pool_frms = str_to_table(_opt.pool_frms)
@@ -130,7 +134,10 @@ function setup(_opt)
         _opt.agent_params.state_dim = gameEnv:nObsFeature()
     end
 
+    print(_opt.agent)
+
     local agent = dqn[_opt.agent](_opt.agent_params)
+    print("Here")
 
     if opt.verbose >= 1 then
         print('Set up Torch using these options:')
